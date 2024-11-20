@@ -20,7 +20,8 @@ int max_tokens = 1000;
 // Define the temperature parameter for controlling randomness
 double temperature = 0.5;
 
-var headers = new AuthenticationHeaderValue("Bearer", openAiApiKey); // Create an AuthenticationHeaderValue with the API key
+// Create an AuthenticationHeaderValue with the API key
+var headers = new AuthenticationHeaderValue("Bearer", openAiApiKey);
 
 // Data object to hold prompt, model, max_tokens, and temperature
 var data = new
