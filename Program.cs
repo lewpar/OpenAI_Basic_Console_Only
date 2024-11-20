@@ -1,8 +1,8 @@
 ﻿using System.Net.Http.Headers;
 using System.Text;
-using Newtonsoft.Json;
+using System.Text.Json;
 
-string? responseStatusCode = null; // Variable to store the response status code
+string? responseStatusCode; // Variable to store the response status code
 
 // Get the OpenAI settings from appsettings.json
 string openAiApiURL = "https://api.openai.com/v1/completions" ?? string.Empty; // Define the OpenAI API URL
@@ -23,9 +23,9 @@ var data = new
     temperature
 };
 
-string json = JsonConvert.SerializeObject(data); // Serialize the data object into a JSON string
+string json = JsonSerializer.Serialize(data); // Serialize the data object into a JSON string
 
-System.Console.WriteLine($"JSON String to send to Open AI API: \n{json}"); // Print the JSON string to the console
+Console.WriteLine($"JSON String to send to Open AI API: \n{json}"); // Print the JSON string to the console
 
 using (var client = new HttpClient()) // Create a new HttpClient
 {
