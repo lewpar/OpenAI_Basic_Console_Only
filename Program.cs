@@ -2,15 +2,23 @@
 using System.Text;
 using System.Text.Json;
 
-string? responseStatusCode; // Variable to store the response status code
+// Define the OpenAI API URL
+string openAiApiURL = "https://api.openai.com/v1/completions" ?? string.Empty;
 
-// Get the OpenAI settings from appsettings.json
-string openAiApiURL = "https://api.openai.com/v1/completions" ?? string.Empty; // Define the OpenAI API URL
-string openAiApiKey = "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" ?? string.Empty; // Define your API key
-string prompt = "Generate 3 astronomy multiple-choice quiz questions with correct answers. Format the quiz in valid JSON format. Use the following JSON format but replace single quotes with double quotes: {'Question 1':{'Question':'Sample question?','Options':{'A':'Sample answer 1','B':'Sample answer 2','C':'Sample answer 3','D':'Sample answer 4'},'Answer':'B'}}" ?? string.Empty; // Define the text prompt
-string model = "text-davinci-003" ?? string.Empty; // Define the model to use
-int max_tokens = 1000; // Define the maximum number of tokens in the response
-double temperature = 0.5; // Define the temperature parameter for controlling randomness
+// Define your API key
+string openAiApiKey = "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" ?? string.Empty;
+
+// Define the text prompt
+string prompt = "Generate 3 astronomy multiple-choice quiz questions with correct answers. Format the quiz in valid JSON format. Use the following JSON format but replace single quotes with double quotes: {'Question 1':{'Question':'Sample question?','Options':{'A':'Sample answer 1','B':'Sample answer 2','C':'Sample answer 3','D':'Sample answer 4'},'Answer':'B'}}" ?? string.Empty;
+
+// Define the model to use
+string model = "text-davinci-003" ?? string.Empty;
+
+// Define the maximum number of tokens in the response
+int max_tokens = 1000;
+
+// Define the temperature parameter for controlling randomness
+double temperature = 0.5;
 
 var headers = new AuthenticationHeaderValue("Bearer", openAiApiKey); // Create an AuthenticationHeaderValue with the API key
 
@@ -23,23 +31,32 @@ var data = new
     temperature
 };
 
-string json = JsonSerializer.Serialize(data); // Serialize the data object into a JSON string
+// Serialize the data object into a JSON string
+string json = JsonSerializer.Serialize(data);
 
-Console.WriteLine($"JSON String to send to Open AI API: \n{json}"); // Print the JSON string to the console
+// Print the JSON string to the console
+Console.WriteLine($"JSON String to send to Open AI API: \n{json}");
 
-using (var client = new HttpClient()) // Create a new HttpClient
+// Create a new HttpClient and dispose of it after use
+using (var client = new HttpClient())
 {
-    client.DefaultRequestHeaders.Authorization = headers; // Set the Authorization header using the API key
+    // Set the Authorization header using the API key
+    client.DefaultRequestHeaders.Authorization = headers;
 
-    var response = await client.PostAsync(openAiApiURL, new StringContent(json, Encoding.UTF8, "application/json"));
     // Send a POST request to the OpenAI API with the JSON data
+    var response = await client.PostAsync(openAiApiURL, new StringContent(json, Encoding.UTF8, "application/json"));
 
-    responseStatusCode = response.StatusCode.ToString(); // Get the response status code
+    // Get the response status code
+    string? responseStatusCode = response.StatusCode.ToString();
 
-    if (response.IsSuccessStatusCode) // If the response is successful (status code 2xx)
+    // Check if the response is successful (status code 2xx)
+    if (response.IsSuccessStatusCode)
     {
-        string responseContent = await response.Content.ReadAsStringAsync(); // Read the response content as a string
-        Console.WriteLine($"Response Content:\n{responseContent}"); // Print the response content
+        // Read the response content as a string
+        string responseContent = await response.Content.ReadAsStringAsync();
+
+        // Print the response content
+        Console.WriteLine($"Response Content:\n{responseContent}");
     }
     else // If the response is not successful
     {
